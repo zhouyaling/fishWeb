@@ -213,7 +213,7 @@
               listType="picture-card"
               class="avatar-uploader"
               :showUploadList="false"
-              action="http://localhost:8080/community_admin_war/qiyu/upload"
+              action="http://dev-communityv5.tq-service.com/community_admin/qiyu/upload"
               :beforeUpload="beforeUpload"
               @change="handleChange"
             >
@@ -291,6 +291,10 @@
         name: "page",
         data() {
             return {
+                uploadDEV:"http://localhost:8080/community_admin_war/qiyu/upload",
+                uploadTest :"http://dev-communityv5.tq-service.com/community_admin/qiyu/upload",
+                baseURLDEV:"http://localhost:8080/community_admin_war/",
+                baseURLTEST:"http://dev-communityv5.tq-service.com/community_admin",
                 userid: "",
                 loading: false,
                 superviseDescribe: "",//报事内容
@@ -336,7 +340,7 @@
             TitleBar
         },
         mounted() {
-            var userid = this.getQueryString("userid");
+            var userid = this.getQueryString("uid");
             //alert("userid======" + userid);
             /*alert(window.location.href);
             alert(window.location.hash.split("?")[1]);*/
@@ -349,11 +353,10 @@
             //初始化数据
             initData(userid) {
                 var that = this;
-                var baseURL = "http://localhost:8080/community_admin_war/";
                 var url = "/qiyu/get_aggregate_info";
                 $.ajax({
                     type: "POST",
-                    url: baseURL + url,
+                    url: that.baseURLTEST + url,
                     contentType: "application/json",
                     data: JSON.stringify({"userid": userid}),
                     success: function (r) {
@@ -379,7 +382,6 @@
                     alert("一键报事内容不能为空");
                     return;
                 }
-                var baseURL = "http://localhost:8080/community_admin_war/";
                 var url = "/qiyu/add_postIt";
 
                 var superviseName = that.aggregateData.name;
@@ -389,7 +391,7 @@
                 var roomId = that.userid.split("_")[1];
                 $.ajax({
                     type: "POST",
-                    url: baseURL + url,
+                    url: that.baseURLTEST + url,
                     contentType: "application/json",
                     data: JSON.stringify({
                         "superviseName": superviseName,
@@ -397,7 +399,7 @@
                         "superviseDescribe": that.superviseDescribe,
                         "roomId": roomId,
                         "contactPhone": that.aggregateData.phone,
-                        "inspTypeId": "大社区报事", "thirdParty": "0"
+                        "inspTypeId": "167", "thirdParty": "0"
                     }),
                     success: function (r) {
                         if (r.errcode == 200) {
@@ -411,11 +413,10 @@
             //修改客户备注
             updateUserRemark(remark) {
                 var that = this;
-                var baseURL = "http://localhost:8080/community_admin_war/";
                 var url = "/qiyu/update_user_remark";
                 $.ajax({
                     type: "POST",
-                    url: baseURL + url,
+                    url: that.baseURLTEST + url,
                     contentType: "application/json",
                     data: JSON.stringify({"userid": that.userid, "remark": remark}),
                     success: function (r) {
@@ -437,12 +438,11 @@
                 var endTime = this.dateFormat("YYYY-mm-dd", date2);
 
                 var that = this;
-                var baseURL = "http://localhost:8080/community_admin_war";
                 var url = "/qiyu/get_postIt_list";
 
                 $.ajax({
                     type: "POST",
-                    url: baseURL + url,
+                    url: that.baseURLTEST + url,
                     contentType: "application/json",
                     data: JSON.stringify({"userid": this.userid, "startTime": startTime, "endTime": endTime}),
                     success: function (r) {
@@ -481,12 +481,11 @@
             moreHandler(item) {
                 if (item.showDetail == false) {
                     var that = this;
-                    var baseURL = "http://localhost:8080/community_admin_war";
                     var url = "/qiyu/get_postIt_detail";
 
                     $.ajax({
                         type: "POST",
-                        url: baseURL + url,
+                        url: that.baseURLTEST + url,
                         contentType: "application/json",
                         data: JSON.stringify({"postItId": item.id}),
                         success: function (r) {
